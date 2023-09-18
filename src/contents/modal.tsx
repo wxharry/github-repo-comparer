@@ -1,17 +1,37 @@
-import { useState } from "react"
-import type { PlasmoCSConfig } from "plasmo"
-import { Modal, Button } from "antd"
+import React, { useState } from "react";
+import type {
+    PlasmoCSConfig,
+    PlasmoCSUIJSXContainer,
+    PlasmoCSUIProps,
+    PlasmoRender
+} from "plasmo"
+import type { FC } from "react"
+import { createRoot } from "react-dom/client"
+import { Modal } from "antd";
 
 export const config: PlasmoCSConfig = {
-  matches: ["https://github.com/*"],
+    matches: ["https://github.com/*"]
 }
 
-export const getStyle = () => {
-  const style = document.createElement("style")
-  return style
-}
+export const getRootContainer = () =>
+    new Promise((resolve) => {
+        const checkInterval = setInterval(() => {
+            const rootContainerParent = document.querySelector(`#repository-details-container > ul`)
+            if (rootContainerParent) {
+                clearInterval(checkInterval)
+                const rootContainer = document.createElement("li")
+                const referenceNode = rootContainerParent.children[0];
+                if (referenceNode) {
+                    rootContainerParent.insertBefore(rootContainer, referenceNode);
+                } else {
+                    rootContainerParent.appendChild(rootContainer);
+                }
+                resolve(rootContainer)
+            }
+        }, 137)
+    })
 
-const PlasmoOverlay = () => {
+const PlasmoOverlay: FC<PlasmoCSUIProps> = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
@@ -26,17 +46,23 @@ const PlasmoOverlay = () => {
       setIsModalOpen(false);
     };
     return (
-        <>
-        <button onClick={showModal}>
-          Open Modal
+        <div className="float-left">
+        <button onClick={showModal} className="btn-sm btn">
+          Compare
         </button>
-        <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
-      </>
+        <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null}>
+            <div>
+                <p>Show A table here</p>
+            </div>
+        </Modal>          
+        </div>
     )
 }
 
-export default PlasmoOverlay
+export const render: PlasmoRender<PlasmoCSUIJSXContainer> = async ({
+    createRootContainer
+}) => {
+    const rootContainer = await createRootContainer()
+    const root = createRoot(rootContainer)
+    root.render(<PlasmoOverlay />)
+}

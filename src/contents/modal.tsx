@@ -58,7 +58,7 @@ const PlasmoOverlay = (prop:any) => {
           key: 'watches',
         },
     ]
-    const {data, repo} = prop;
+    const {data} = prop;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
@@ -75,7 +75,7 @@ const PlasmoOverlay = (prop:any) => {
             Compare
             </button>
             <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null}>
-                    <p>{repo}</p>
+                    {/* <p>{data.repo}</p> */}
                     <Table columns={columns} dataSource={data} rowKey={record=>`${record.owner}/${record.repo}`} pagination={false} />
             </Modal>
         </div>
@@ -87,13 +87,6 @@ export const render: PlasmoRender<PlasmoCSUIJSXContainer> = async ({
 }) => {
     const rootContainer = await createRootContainer()
     const root = createRoot(rootContainer)
-    const owner = "microsoft";
-    const repo = "vscode";
-    const res = await fetchRepoData(owner, repo);
-    const data = [{
-        ...res,
-        owner: owner,
-        repo: repo,
-    }]
-    root.render(<PlasmoOverlay data={data}/>)
+    const res = await fetchRepoData();
+    root.render(<PlasmoOverlay data={[res]}/>)
 }

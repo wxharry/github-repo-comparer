@@ -15,15 +15,17 @@ export const fetchRepoData = async () => {
       owner: owner,
       repo: name,
     });
-    return {
+    return [{
       "stars": res.data.stargazers_count,
       "forks": res.data.forks_count,
-      "watches": res.data.watchers_count,
+      "open_issues": res.data.open_issues_count,
+      "created_at": res.data.created_at,
+      "updated_at": res.data.updated_at,
       "owner": owner,
       "repo": name,
-    }
+    }]
   } catch (error) {
     console.error("Error fetching data:", error);
-    return null;
+    return [];
   }
 };

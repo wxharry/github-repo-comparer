@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useStorage } from "@plasmohq/storage/hook"
 import type {
     PlasmoCSConfig,
     PlasmoCSUIJSXContainer,
@@ -69,23 +70,19 @@ const PlasmoOverlay = (prop:any) => {
         },
     ]
     const {data} = prop;
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const showModal = () => {
-      setIsModalOpen(true);
-    };
-
+    const [isModalOpen, setIsModalOpen] = useStorage("isModalOpen");
+    
     const handleCancel = () => {
       setIsModalOpen(false);
     };
 
     return (
         <div className="float-left">
-            <button onClick={showModal} className="btn-sm btn">
+            {/* <button onClick={showModal} className="btn-sm btn">
             Compare
-            </button>
-            <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null} width={1000}>
-                    <Table columns={columns} dataSource={data} rowKey={record=>`${record.owner}/${record.repo}`} pagination={false} />
+            </button> */}
+            <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null} width={1000} style={{top: 150}}>
+                <Table columns={columns} dataSource={data} rowKey={record=>`${record.owner}/${record.repo}`} pagination={false} />
             </Modal>
         </div>
     )

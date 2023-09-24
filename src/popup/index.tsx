@@ -1,16 +1,61 @@
 import { useStorage } from "@plasmohq/storage/hook"
-import { Button, Input, Table } from "antd"
+import { sendToContentScript } from "@plasmohq/messaging"
+import { Button } from "antd"
+import { useEffect, useState } from "react";
 
-import { useState } from "react"
 
 function IndexPopup() {
-  const [_, setIsModalOpen] = useStorage("isModalOpen", (v) => v === undefined ? false: v)
+  const [isModalOpen, setIsModalOpen] = useStorage("isModalOpen", (v) => v === undefined ? false: v);
+  const [repoList, setRepoList] = useStorage("repoList", (v) => v === undefined ? []: v);
+  const [currentRepo, setCurrentRepo] = useState({owner: "", repo: ""});
+  const [isCurrentRepoAdded, setIsCurrentRepoAdded] = useState(false);
+
   const onClickShowDetail = () => {
     setIsModalOpen(true);
   }
-  const onClickAddCurrent = (e) => {
-
+  useEffect(()=>{
+    const GetOwnerAndName = async () => {
+      const resp = await sendToContentScript({
+        name: "GetFullRepoName"
+      })
+      if (resp) {
+          setCurrentRepo(resp)
+          setIsCurrentRepoAdded(repoList.some(item => item.owner === resp.owner && item.repo === resp.repo))
+      } else {
+        setCurrentRepo(null)
+      }
+    }
+    GetOwnerAndName();
+  }, [])
+  
+  useEffect(()=>{
+    setIsCurrentRepoAdded(repoList.some(item => item.owner === currentRepo.owner && item.repo === currentRepo.repo))
+  }, [repoList, currentRepo])
+  
+  const onClickAddCurrent = async () => {
+    // if resp is not empty
+    if (currentRepo) {
+      // if currentRepo not in repoList
+      const isItemInList = repoList.some(item => item.owner === currentRepo.owner && item.repo === currentRepo.repo);
+      if (!isItemInList) {
+        // Add currentRepo to repoList 
+        setRepoList(prevRepoList => [...prevRepoList, currentRepo]);
+      } 
+    }
   }
+
+  const onClickRemoveCurrent = async () => {
+    if (currentRepo) {
+      // Add currentRepo to repoList if currentRepo not in repoList
+      const restRepoList = repoList.filter(item => item.owner !== currentRepo.owner || item.repo !== currentRepo.repo);
+      setRepoList(restRepoList);
+    }
+  }
+  
+  const onClickClear = () => {
+    setRepoList([]);
+  }
+
   return (
     <div
       style={{
@@ -18,7 +63,13 @@ function IndexPopup() {
         flexDirection: "column",
       }}>
         <Button onClick={onClickShowDetail} type="text">Show in detail</Button>
-        <Button onClick={onClickAddCurrent} type="text"> Add current </Button>
+        { isCurrentRepoAdded ? 
+          <Button onClick={onClickRemoveCurrent} type="text" >Remove Current</Button>
+          :
+          <Button onClick={onClickAddCurrent} type="text" >Add Current</Button>
+        }
+        
+        <Button onClick={onClickClear} type="text" danger>Clear All</Button>
     </div>
   )
 }

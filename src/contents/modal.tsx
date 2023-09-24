@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStorage } from "@plasmohq/storage/hook"
 import type {
     PlasmoCSConfig,
@@ -7,7 +7,10 @@ import type {
 } from "plasmo"
 import { createRoot } from "react-dom/client"
 import { Modal, Table} from "antd";
-import {fetchRepoData} from "../service"
+import { fetchRepoListData} from "../service"
+import { Storage } from "@plasmohq/storage"
+ 
+const storage = new Storage()
 
 export const config: PlasmoCSConfig = {
     matches: ["https://github.com/*"]
@@ -69,20 +72,36 @@ const PlasmoOverlay = (prop:any) => {
           key: 'updated_at',
         },
     ]
-    const {data} = prop;
     const [isModalOpen, setIsModalOpen] = useStorage("isModalOpen");
-    
+    const [repoList, setRepoList] = useStorage("repoList");
+    const [repoData, setRepoData] = useState([]);
+
     const handleCancel = () => {
       setIsModalOpen(false);
     };
+    useEffect(()=>{
+        const fetchData = async () => {
+            try {
+                const result = await fetchRepoListData(repoList)
+                setRepoData(result);
+              } catch (error) {
+                console.error("Error fetching data:", error);
+              }
+        }
+        if (repoList && repoList.length > 0) {
+            fetchData()
+        } else {
+            setRepoData([])
+        }
+    }, [repoList])
+
 
     return (
         <div className="float-left">
-            {/* <button onClick={showModal} className="btn-sm btn">
-            Compare
-            </button> */}
-            <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null} width={1000} style={{top: 150}}>
-                <Table columns={columns} dataSource={data} rowKey={record=>`${record.owner}/${record.repo}`} pagination={false} />
+            <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null} width={1000} style={{top: 150}} keyboard>
+                <div style={{minHeight: 350}}>
+                    <Table columns={columns} dataSource={repoData} rowKey={record=>`${record.owner}/${record.repo}`} pagination={false}  />
+                </div>
             </Modal>
         </div>
     )
@@ -93,6 +112,6 @@ export const render: PlasmoRender<PlasmoCSUIJSXContainer> = async ({
 }) => {
     const rootContainer = await createRootContainer()
     const root = createRoot(rootContainer)
-    const res = await fetchRepoData();
-    root.render(<PlasmoOverlay data={res}/>)
+     
+    root.render(<PlasmoOverlay/>)
 }

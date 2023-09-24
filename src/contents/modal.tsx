@@ -74,8 +74,8 @@ const PlasmoOverlay = (prop:any) => {
           key: 'updated_at',
         },
     ]
-    const [isModalOpen, setIsModalOpen] = useStorage("isModalOpen");
     const [repoList, setRepoList] = useStorage("repoList");
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [repoData, setRepoData] = useState([]);
     const [selectedRepo, setSelectedRepo] = useState([]);
     const [inputVal, setInputVal] = useState("");
@@ -143,6 +143,13 @@ const PlasmoOverlay = (prop:any) => {
         })
     }
 
+    chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
+        if (req.name == 'openModal'){
+            setIsModalOpen(true)           
+        }
+        return true;
+    })
+    
     return (
         <div className="float-left">
             <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null} width={1000} style={{top: 150}} keyboard>

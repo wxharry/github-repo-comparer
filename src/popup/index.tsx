@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 
 
 function IndexPopup() {
-  const [isModalOpen, setIsModalOpen] = useStorage("isModalOpen", (v) => v === undefined ? false: v);
   const [repoList, setRepoList] = useStorage("repoList", (v) => v === undefined ? []: v);
   const [currentRepo, setCurrentRepo] = useState({owner: "", repo: ""});
   const [isCurrentRepoAdded, setIsCurrentRepoAdded] = useState(false);
 
   const onClickShowDetail = () => {
-    setIsModalOpen(true);
+    sendToContentScript({
+      name: "openModal"
+    })
   }
   useEffect(()=>{
     const GetOwnerAndName = async () => {

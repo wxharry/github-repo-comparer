@@ -6,9 +6,11 @@ import type {
     PlasmoRender
 } from "plasmo"
 import { createRoot } from "react-dom/client"
-import { Modal, Table} from "antd";
-import { fetchRepoListData} from "../service"
+import { Modal, Table, Space, Button, Input, message} from "antd";
+import { fetchRepoData, fetchRepoListData} from "../service"
 import { Storage } from "@plasmohq/storage"
+import { validateAndExtractRepoInfo } from "~utils/utils";
+import { error } from "console";
  
 const storage = new Storage()
 
@@ -75,6 +77,9 @@ const PlasmoOverlay = (prop:any) => {
     const [isModalOpen, setIsModalOpen] = useStorage("isModalOpen");
     const [repoList, setRepoList] = useStorage("repoList");
     const [repoData, setRepoData] = useState([]);
+    const [selectedRepo, setSelectedRepo] = useState([]);
+    const [inputVal, setInputVal] = useState("");
+    const [inputErrMsg, setInputErrMsg] = useState("");
 
     const handleCancel = () => {
       setIsModalOpen(false);
@@ -95,12 +100,69 @@ const PlasmoOverlay = (prop:any) => {
         }
     }, [repoList])
 
+    const rowSelection = {
+        onChange: (_, selectedRows) => {
+            setSelectedRepo(selectedRows);
+        },
+      };
+
+    const removeRepo = () => {
+        const newRepoList = repoList.filter(item => 
+            !selectedRepo.some(selectedItem => 
+              selectedItem.repo === item.repo && selectedItem.owner === item.owner
+            )
+          );
+        setRepoList(newRepoList);
+    }
+
+    const onChagneInput = (e) => {
+        setInputVal(e.target.value)
+        setInputErrMsg("");
+    }
+
+    const onClickAdd = async () => {
+        const inputRepo = validateAndExtractRepoInfo(inputVal);
+        if (!inputRepo) {
+            setInputErrMsg("Cannot correctly parse repository name")
+            message.error("Cannot correctly parse repository name", 2, ()=>{
+            })
+            return;
+        } // set input status to warning
+        fetchRepoData(inputRepo).then(res => {
+            const isItemInList = repoList.some(item => item.owner === res.owner && item.repo === res.repo);
+            if (!isItemInList) {
+                setRepoList(prevRepoList => [...prevRepoList, res]);
+                setInputVal('');
+                setInputErrMsg('');
+                return;
+            }
+        }).catch(() => {
+            setInputErrMsg("Cannot fetch repository data")
+            message.error("Cannot fetch repository data", 2, ()=>{
+            })
+        })
+    }
 
     return (
         <div className="float-left">
             <Modal title="Repo Comparer" open={isModalOpen} onCancel={handleCancel} footer={null} width={1000} style={{top: 150}} keyboard>
                 <div style={{minHeight: 350}}>
-                    <Table columns={columns} dataSource={repoData} rowKey={record=>`${record.owner}/${record.repo}`} pagination={false}  />
+                <Space style={{ marginBottom: 16 }}>
+                    <Input onChange={onChagneInput} value={inputVal} allowClear onPressEnter={inputVal === '' ? null : onClickAdd}
+                        status={inputErrMsg === "" ? "" : "error"} addonAfter={
+                            <Button type="link" ghost onClick={onClickAdd} size="small" disabled={inputVal === ''}>Add</Button>
+                        }
+                    />
+                    <Button onClick={removeRepo} danger disabled={selectedRepo?.length === 0} >Remove</Button>
+                </Space>
+                    <Table 
+                        columns={columns} dataSource={repoData} rowKey={record=>`${record.owner}/${record.repo}`}
+                        pagination={false}  
+                        rowSelection={{
+                            type: "checkbox",
+                            ...rowSelection,
+                          }}
+                        />
                 </div>
             </Modal>
         </div>

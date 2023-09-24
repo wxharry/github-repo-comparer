@@ -36,7 +36,8 @@ export const fetchRepoData = async ({owner, repo}) => {
       "repo": repo,
     }
   } catch (error) {
-    console.error("Error fetching data:", error);
+    // TODO: analyze error code
+    // console.error("Error fetching data:", error);
     return null;
   }
 };

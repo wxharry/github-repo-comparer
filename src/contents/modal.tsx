@@ -150,7 +150,7 @@ const PlasmoOverlay = (prop:any) => {
                 <Space style={{ marginBottom: 16 }}>
                     <Input onChange={onChagneInput} value={inputVal} allowClear onPressEnter={inputVal === '' ? null : onClickAdd}
                         status={inputErrMsg === "" ? "" : "error"} addonAfter={
-                            <Button type="link" ghost onClick={onClickAdd} size="small" disabled={inputVal === ''}>Add</Button>
+                            <Button type="link" onClick={onClickAdd} size="small" disabled={inputVal === ''}>Add</Button>
                         }
                     />
                     <Button onClick={removeRepo} danger disabled={selectedRepo?.length === 0} >Remove</Button>

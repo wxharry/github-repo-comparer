@@ -10,6 +10,11 @@
     "test": "plasmo test"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/modifiers": "^6.0.1",
+    "@dnd-kit/sortable": "^7.0.2",
+    "@dnd-kit/utilities": "^3.2.1",
     "@plasmohq/messaging": "^0.5.0",
     "@plasmohq/storage": "^1.8.0",
     "antd": "^5.9.0",

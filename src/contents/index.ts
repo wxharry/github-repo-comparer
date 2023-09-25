@@ -1,16 +1,9 @@
-import { GetOwnerRepoName } from "~service";
-
+import { validateAndExtractRepoInfo } from "~utils/utils";
 
 chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
     if (req.name == 'GetFullRepoName'){
-        GetOwnerRepoName()
-        .then(res => {
-            sendResponse(res);
-        })
-        .catch(error => {
-            console.error("Error fetching repo data:", error);
-            sendResponse({ error: "Failed to fetch repo data" });
-        });                
+        const res = validateAndExtractRepoInfo(window.location.href);
+        sendResponse(res)
     }
     // Indicate that the response will be sent asynchronously
     return true;

@@ -239,8 +239,6 @@ const PlasmoOverlay = (prop:any) => {
     }
 
     const onDragEnd = ({ active, over }) => {
-        console.log(active, over);
-        
         if (active.id !== over?.id) {
             setRepoData((prev) => {
             const activeIndex = prev.findIndex((i) => `${i.owner}/${i.repo}` === active.id);

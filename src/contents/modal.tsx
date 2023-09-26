@@ -132,50 +132,13 @@ const PlasmoOverlay = (prop:any) => {
           key: 'updated_at',
         },
     ]
-    const columns2 = [
-        {
-          key: 'sort',
-        },
-        {
-          title: 'Name',
-          dataIndex: 'name',
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age',
-        },
-        {
-          title: 'Address',
-          dataIndex: 'address',
-        },
-      ];
     const [repoList, setRepoList] = useStorage("repoList");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [repoData, setRepoData] = useState([]);
     const [selectedRepo, setSelectedRepo] = useState([]);
     const [inputVal, setInputVal] = useState("");
     const [inputErrMsg, setInputErrMsg] = useState("");
-    const [dataSource, setDataSource] = useState([
-        {
-          key: '1',
-          name: 'John Brown',
-          age: 32,
-          address:
-            'Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text Long text',
-        },
-        {
-          key: '2',
-          name: 'Jim Green',
-          age: 42,
-          address: 'London No. 1 Lake Park',
-        },
-        {
-          key: '3',
-          name: 'Joe Black',
-          age: 32,
-          address: 'Sidney No. 1 Lake Park',
-        },
-      ]);
+    const [tableKey, setTableKey] = useState(Date.now());
     const handleCancel = () => {
       setIsModalOpen(false);
     };
@@ -196,18 +159,19 @@ const PlasmoOverlay = (prop:any) => {
     }, [repoList])
 
     const rowSelection = {
-        onChange: (_, selectedRows) => {
+        onChange: (e, selectedRows) => {
             setSelectedRepo(selectedRows);
         },
       };
 
     const removeRepo = () => {
-        const newRepoList = repoList.filter(item => 
+        setRepoList((previousRepoList) => [...previousRepoList].filter(item => 
             !selectedRepo.some(selectedItem => 
               selectedItem.repo === item.repo && selectedItem.owner === item.owner
             )
-          );
-        setRepoList(newRepoList);
+          ));
+        setSelectedRepo([]);
+        setTableKey(Date.now()); // use TableKey to force update table
     }
 
     const onChagneInput = (e) => {
@@ -229,7 +193,6 @@ const PlasmoOverlay = (prop:any) => {
                 setRepoList(prevRepoList => [...prevRepoList, res]);
                 setInputVal('');
                 setInputErrMsg('');
-                return;
             }
         }).catch(() => {
             setInputErrMsg("Cannot fetch repository data")
@@ -249,7 +212,8 @@ const PlasmoOverlay = (prop:any) => {
     };
     chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
         if (req.name == 'openModal'){
-            setIsModalOpen(true)           
+            setIsModalOpen(true)
+            focus()
         }
         return true;
     })
@@ -273,6 +237,7 @@ const PlasmoOverlay = (prop:any) => {
                         strategy={verticalListSortingStrategy}
                     >
                         <Table 
+                        key={tableKey}
                         components={{
                             body: {
                                 row: Row,

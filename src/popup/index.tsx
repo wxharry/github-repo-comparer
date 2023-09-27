@@ -45,14 +45,6 @@ function IndexPopup() {
     }
   }
 
-  const onClickRemoveCurrent = async () => {
-    if (currentRepo) {
-      // Add currentRepo to repoList if currentRepo not in repoList
-      const restRepoList = repoList.filter(item => item.owner !== currentRepo.owner || item.repo !== currentRepo.repo);
-      setRepoList(restRepoList);
-    }
-  }
-  
   const onClickClear = () => {
     setRepoList([]);
   }
@@ -64,12 +56,9 @@ function IndexPopup() {
         flexDirection: "column",
       }}>
         <Button onClick={onClickShowDetail} type="text">Show in detail</Button>
-        { isCurrentRepoAdded ? 
-          <Button onClick={onClickRemoveCurrent} type="text" >Remove Current</Button>
-          :
+        { !isCurrentRepoAdded && 
           <Button onClick={onClickAddCurrent} type="text" >Add Current</Button>
         }
-        
         <Button onClick={onClickClear} type="text" danger>Clear All</Button>
     </div>
   )

@@ -100,11 +100,14 @@ const PlasmoOverlay = (prop:any) => {
           title: 'Repo',
           dataIndex: 'repo',
           key: 'repo',
+          render: (text, record, index) => <a href={`https://github.com/${record.owner}/${record.repo}`}  target="_blank" >{text}</a>,
+          
         },
         {
           title: 'owner',
           dataIndex: 'owner',
           key: 'owner',
+          render: (text) => <a href={`https://github.com/${text}`} target="_blank" >{text}</a>,
         },
         {
           title: 'stars',

@@ -54,6 +54,7 @@ function IndexPopup() {
       style={{
         display: "flex",
         flexDirection: "column",
+        width: 130
       }}>
         <Button onClick={onClickShowDetail} type="text">Show in detail</Button>
         { !isCurrentRepoAdded && 

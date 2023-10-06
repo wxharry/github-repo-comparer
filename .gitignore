@@ -34,3 +34,6 @@ dist/
 
 # env
 .env
+
+# key.json
+key.json

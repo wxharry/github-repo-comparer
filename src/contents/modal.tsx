@@ -6,7 +6,7 @@ import type {
     PlasmoRender
 } from "plasmo"
 import { createRoot } from "react-dom/client"
-import { Modal, Table, Space, Button, Input, message, Tooltip} from "antd";
+import { Modal, Table, Space, Button, Input, message, Tooltip, Tag} from "antd";
 import { fetchRepoData, fetchRepoListData} from "../service"
 import { validateAndExtractRepoInfo } from "~utils/utils";
 import { MenuOutlined } from '@ant-design/icons';
@@ -21,6 +21,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { numberjs } from "~utils/number";
 
 dayjs.extend(relativeTime)
 export const config: PlasmoCSConfig = {
@@ -117,16 +118,31 @@ const PlasmoOverlay = (prop:any) => {
           title: 'stars',
           dataIndex: 'stars',
           key: 'stars',
+          render: (text) => (
+            <Tooltip title={numberjs(text).toString()}>
+                <Tag color="gold">{numberjs(text).inGeneral()}</Tag>
+            </Tooltip>
+          )
         },
         {
           title: 'forks',
           dataIndex: 'forks',
           key: 'forks',
+          render: (text) => (
+            <Tooltip title={numberjs(text).toString()}>
+                <Tag color="green">{numberjs(text).inGeneral()}</Tag>
+            </Tooltip>
+          )
         },
         {
           title: 'open issues',
           dataIndex: 'open_issues',
           key: 'open_issues',
+          render: (text) => (
+            <Tooltip title={numberjs(text).toString()}>
+                <Tag color="geekblue">{numberjs(text).inGeneral()}</Tag>
+            </Tooltip>
+          )
         },
         {
           title: 'Created At',

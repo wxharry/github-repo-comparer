@@ -6,7 +6,7 @@ import type {
     PlasmoRender
 } from "plasmo"
 import { createRoot } from "react-dom/client"
-import { Modal, Table, Space, Button, Input, message} from "antd";
+import { Modal, Table, Space, Button, Input, message, Tooltip} from "antd";
 import { fetchRepoData, fetchRepoListData} from "../service"
 import { validateAndExtractRepoInfo } from "~utils/utils";
 import { MenuOutlined } from '@ant-design/icons';
@@ -19,6 +19,10 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import dayjs from "dayjs";
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(relativeTime)
 export const config: PlasmoCSConfig = {
     matches: ["https://github.com/*"]
 }
@@ -128,11 +132,21 @@ const PlasmoOverlay = (prop:any) => {
           title: 'Created At',
           dataIndex: 'created_at',
           key: 'created_at',
+          render: (text) => (
+             <Tooltip title={dayjs(text).toString()}>
+                <span>{dayjs(text).fromNow()}</span>
+            </Tooltip>
+          )
         },
         {
           title: 'Updated At',
           dataIndex: 'updated_at',
           key: 'updated_at',
+          render: (text) => (
+            <Tooltip title={dayjs(text).toString()}>
+               <span>{dayjs(text).fromNow()}</span>
+           </Tooltip>
+         )
         },
     ]
     const [repoList, setRepoList] = useStorage("repoList");

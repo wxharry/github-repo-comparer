@@ -18,6 +18,7 @@
     "@plasmohq/messaging": "^0.5.0",
     "@plasmohq/storage": "^1.8.0",
     "antd": "^5.9.0",
+    "dayjs": "^1.11.10",
     "github-url-detection": "^8.1.0",
     "octokit": "^3.1.0",
     "plasmo": "0.83.0",

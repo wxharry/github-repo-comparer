@@ -129,7 +129,7 @@ const PlasmoOverlay = (prop: any) => {
       )
     },
     {
-      title: "stars",
+      title: "Stars",
       dataIndex: "stars",
       key: "stars",
       render: (text) => (
@@ -139,7 +139,7 @@ const PlasmoOverlay = (prop: any) => {
       )
     },
     {
-      title: "forks",
+      title: "Forks",
       dataIndex: "forks",
       key: "forks",
       render: (text) => (
@@ -149,7 +149,7 @@ const PlasmoOverlay = (prop: any) => {
       )
     },
     {
-      title: "open issues",
+      title: "Issues",
       dataIndex: "open_issues",
       key: "open_issues",
       render: (text) => (
@@ -157,6 +157,11 @@ const PlasmoOverlay = (prop: any) => {
           <Tag color="geekblue">{numberjs(text).inGeneral()}</Tag>
         </Tooltip>
       )
+    },
+    {
+      title: "Language",
+      dataIndex: "language",
+      key: "language"
     },
     {
       title: "Created At",

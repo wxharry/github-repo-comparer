@@ -32,6 +32,7 @@ export const fetchRepoData = async ({ owner, repo }) => {
       open_issues: res.data.open_issues_count,
       created_at: res.data.created_at,
       updated_at: res.data.updated_at,
+      language: res.data.language,
       owner: owner,
       repo: repo
     }

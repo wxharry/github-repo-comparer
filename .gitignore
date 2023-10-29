@@ -37,3 +37,6 @@ dist/
 
 # key.json
 key.json
+
+# Settings files
+.vscode/*

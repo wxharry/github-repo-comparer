@@ -21,6 +21,9 @@ export const GetOwnerRepoName = async () => {
 }
 
 export const fetchRepoData = async ({ owner, repo }) => {
+  if (!owner || !repo) {
+    return null
+  }
   try {
     const res = await octokit.request("GET /repos/{owner}/{repo}", {
       owner: owner,
@@ -44,6 +47,9 @@ export const fetchRepoData = async ({ owner, repo }) => {
 }
 
 export const fetchRepoListData = async (repoList) => {
+  if (!repoList || repoList.length == 0) {
+    return []
+  }
   try {
     // Fetch data for all repos in parallel and await the results
     const results = await Promise.all(

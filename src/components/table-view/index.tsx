@@ -214,6 +214,7 @@ export const TableView = (prop: any) => {
       message.error("Cannot correctly parse repository name", 2, () => {})
       return
     } // set input status to warning
+
     fetchRepoData(inputRepo)
       .then((res) => {
         const isItemInList = repoList.some(

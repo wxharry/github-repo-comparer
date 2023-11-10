@@ -9,11 +9,7 @@ import type {
 import React, { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 
-import { useStorage } from "@plasmohq/storage/hook"
-
-import { TableView } from "~contents/table-view"
-
-import { fetchRepoListData } from "../../service"
+import { TableView } from "~components/table-view"
 
 dayjs.extend(relativeTime)
 export const config: PlasmoCSConfig = {
@@ -41,30 +37,11 @@ export const getRootContainer = () =>
   })
 
 const PlasmoOverlay = (prop: any) => {
-  const [repoList, setRepoList] = useStorage("repoList")
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [repoData, setRepoData] = useState([])
 
   const handleCancel = () => {
     setIsModalOpen(false)
   }
-
-  // Fetch repo data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await fetchRepoListData(repoList)
-        setRepoData(result)
-      } catch (error) {
-        console.error("Error fetching data:", error)
-      }
-    }
-    if (repoList && repoList.length > 0) {
-      fetchData()
-    } else {
-      setRepoData([])
-    }
-  }, [repoList])
 
   // Listen for messages from the background script
   chrome.runtime.onMessage.addListener((req, _, sendResponse) => {

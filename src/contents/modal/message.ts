@@ -5,6 +5,6 @@ chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
     const res = validateAndExtractRepoInfo(window.location.href)
     sendResponse(res)
   }
-  // Indicate that the response will be sent asynchronously
-  return true
+  // Indicate that the response will be sent synchronously
+  return false
 })

@@ -13,7 +13,7 @@ import { TableView } from "~components/table-view"
 
 dayjs.extend(relativeTime)
 export const config: PlasmoCSConfig = {
-  matches: ["<all_urls>"]
+  matches: ["https://github.com/*"]
 }
 
 export const getRootContainer = () =>

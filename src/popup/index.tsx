@@ -36,12 +36,14 @@ function IndexPopup() {
   }, [])
 
   useEffect(() => {
-    setIsCurrentRepoAdded(
-      repoList.some(
-        (item) =>
-          item.owner === currentRepo.owner && item.repo === currentRepo.repo
+    if (currentRepo) {
+      setIsCurrentRepoAdded(
+        repoList.some(
+          (item) =>
+            item.owner === currentRepo.owner && item.repo === currentRepo.repo
+        )
       )
-    )
+    }
   }, [repoList, currentRepo])
 
   const onClickAddCurrent = async () => {
@@ -71,9 +73,9 @@ function IndexPopup() {
         width: 130
       }}>
       <Button onClick={onClickShowDetail} type="text">
-        Show in detail
+        Show detail
       </Button>
-      {!isCurrentRepoAdded && (
+      {currentRepo && !isCurrentRepoAdded && (
         <Button onClick={onClickAddCurrent} type="text">
           Add Current
         </Button>

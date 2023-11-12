@@ -13,15 +13,13 @@ import { TableView } from "~components/table-view"
 
 dayjs.extend(relativeTime)
 export const config: PlasmoCSConfig = {
-  matches: ["https://github.com/*"]
+  matches: ["<all_urls>"]
 }
 
 export const getRootContainer = () =>
   new Promise((resolve) => {
     const checkInterval = setInterval(() => {
-      const rootContainerParent = document.querySelector(
-        `#repository-details-container > ul`
-      )
+      const rootContainerParent = document.querySelector(`body`)
       if (rootContainerParent) {
         clearInterval(checkInterval)
         const rootContainer = document.createElement("li")
@@ -45,7 +43,7 @@ const PlasmoOverlay = (prop: any) => {
 
   // Listen for messages from the background script
   chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
-    if (req.name == "openModal") {
+    if (req.name === "openModal") {
       setIsModalOpen(true)
       focus()
     }

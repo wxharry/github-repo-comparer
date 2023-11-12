@@ -31,3 +31,12 @@ dist/
 
 # typescript
 .tsbuildinfo
+
+# env
+.env
+
+# key.json
+key.json
+
+# Settings files
+.vscode/*

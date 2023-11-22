@@ -4,6 +4,9 @@ name: "Build and Release"
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - master
 
 run-name: Release Latest build
 jobs:

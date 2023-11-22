@@ -1,0 +1,43 @@
+# build.yml
+# This workflow will build a Chrome extension and release it as a pre-release
+name: release
+
+on:
+  workflow_dispatch:
+
+run-name: Release Latest build
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+
+      - name: Build
+        run: |
+          pnpm install
+          pnpm run build
+        env:
+          PLASMO_PUBLIC_API_TOKEN: ${{ secrets.PLASMO_PUBLIC_API_TOKEN }}
+
+      - name: Zip build
+        run: zip build/gh-repo-comp.zip  -r build/chrome-mv3-prod/*
+
+      - name: Pre-Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Development Build"
+          files: |
+            build/gh-repo-comp.zip

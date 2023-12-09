@@ -6,7 +6,7 @@ import type {
   PlasmoCSUIJSXContainer,
   PlasmoRender
 } from "plasmo"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { createRoot } from "react-dom/client"
 
 import { TableView } from "~components/table-view"
@@ -22,7 +22,7 @@ export const getRootContainer = () =>
       const rootContainerParent = document.querySelector(`body`)
       if (rootContainerParent) {
         clearInterval(checkInterval)
-        const rootContainer = document.createElement("li")
+        const rootContainer = document.createElement("div")
         const referenceNode = rootContainerParent.children[0]
         if (referenceNode) {
           rootContainerParent.insertBefore(rootContainer, referenceNode)

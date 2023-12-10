@@ -3,10 +3,12 @@
 name: "Build and Release"
 
 on:
-  workflow_dispatch:
   push:
     branches:
-      - master
+      - "master"
+  pull_request:
+    branches:
+      - "master"
 
 run-name: Release Latest build
 jobs:
@@ -35,10 +37,12 @@ jobs:
         run: zip build/gh-repo-comp.zip  -r build/chrome-mv3-prod/*
 
       - name: Pre-Release
-        uses: softprops/action-gh-release@v1
+        if: ${{ steps.check_files.outputs.files_exists == 'true' && github.event_name == 'push' }}
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          tag_name: latest
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
-          name: "Development Build"
+          title: "Development Build"
           files: |
             build/gh-repo-comp.zip

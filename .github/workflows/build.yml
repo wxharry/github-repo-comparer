@@ -35,10 +35,11 @@ jobs:
         run: zip build/gh-repo-comp.zip  -r build/chrome-mv3-prod/*
 
       - name: Pre-Release
-        uses: softprops/action-gh-release@v1
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          tag_name: latest
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
           prerelease: true
-          name: "Development Build"
+          title: "Development Build"
           files: |
             build/gh-repo-comp.zip

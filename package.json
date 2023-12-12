@@ -1,7 +1,7 @@
 {
   "name": "github-repo-comparer",
   "displayName": "Github repo comparer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A comparer for Github Repositories.",
   "author": "Harry Wu<xiaohanwu12@gmail.com>",
   "scripts": {
@@ -9,7 +9,8 @@
     "build": "plasmo build",
     "test": "plasmo test",
     "prepare": "husky install",
-    "prettier": "pnpm exec prettier . --write"
+    "prettier": "pnpm exec prettier . --write",
+    "package": "plasmo build --zip"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

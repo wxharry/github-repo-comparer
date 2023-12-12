@@ -24,17 +24,16 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: latest
           run_install: true
 
-      - name: Build
-        run: |
-          pnpm run build
+      - name: Build the extension
+        run: pnpm build
         env:
           PLASMO_PUBLIC_API_TOKEN: ${{ secrets.PLASMO_PUBLIC_API_TOKEN }}
 
-      - name: Zip build
-        run: zip build/gh-repo-comp.zip  -r build/chrome-mv3-prod/*
+      - name: Package the extension into a zip artifact
+        run: pnpm package
 
       - name: Pre-Release
         if: ${{ github.event_name == 'push' }}
@@ -44,5 +43,4 @@ jobs:
           automatic_release_tag: "latest"
           prerelease: true
           title: "Development Build"
-          files: |
-            build/gh-repo-comp.zip
+          files: build/chrome-mv3-prod.zip

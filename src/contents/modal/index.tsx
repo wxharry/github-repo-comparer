@@ -6,7 +6,7 @@ import type {
   PlasmoCSUIJSXContainer,
   PlasmoRender
 } from "plasmo"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { createRoot } from "react-dom/client"
 
 import { TableView } from "~components/table-view"
@@ -36,6 +36,20 @@ export const getRootContainer = () =>
 
 const PlasmoOverlay = (prop: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'o') {
+        setIsModalOpen(true)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress)
+    }
+  }, [])
 
   const handleCancel = () => {
     setIsModalOpen(false)

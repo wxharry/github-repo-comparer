@@ -1,5 +1,6 @@
 import { Button } from "antd"
 import { useEffect, useState } from "react"
+import { GetOwnerRepoName } from "src/service/index"
 
 import { sendToContentScript } from "@plasmohq/messaging"
 import { useStorage } from "@plasmohq/storage/hook"
@@ -86,5 +87,25 @@ function IndexPopup() {
     </div>
   )
 }
+
+  useEffect(() => {
+    const handleKeyPress = async (event) => {
+      if (event.key === 'a') {
+        const { owner, repo } = await GetOwnerRepoName()
+        if (owner && repo) {
+          const isItemInList = repoList.some(
+            (item) => item.owner === owner && item.repo === repo
+          )
+          if (!isItemInList) {
+            setRepoList(prevRepoList => [...prevRepoList, {owner, repo}])
+          }
+        }
+      } else if (event.key === 'c') {
+        setRepoList([])
+      }
+    }
+    window.addEventListener('keydown', handleKeyPress)
+    return () => window.removeEventListener('keydown', handleKeyPress)
+  }, [repoList])
 
 export default IndexPopup
